@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="email_field">Masukkan email anda</string>
+    <string name="password_field">Masukkan password anda</string>
+    <string name="title">STORY APP</string>
+    <string name="title_desc">Bagiku ceritamu tanpa khawatir</string>
+    <string name="nama_field">Masukkan nama anda</string>
+    <string name="nav_open">Buka</string>
+    <string name="nav_close">Tutup</string>
+    <string name="appwidget_text">Story App</string>
+    <string name="camera">Kamera</string>
+    <string name="galery">Galeri</string>
+    <string name="descHint">Deskripsi..</string>
+    <string name="submit">Kirim</string>
+    <string name="userPlaceHolder">Pengguna</string>
+    <string name="datePlaceHolder">Senin, 21 September 2023 (00:00)</string>
+    <string name="descriptionText">Deskripsi</string>
+    <string name="createdAtText">Dibuat pada :</string>
+    <string name="createdByText">Oleh :</string>
+    <string name="descriptionPlaceHolder">Lorem Ipsum Yeah</string>
+    <string name="no_account">Tidak punya akun?</string>
+    <string name="register">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="name">Nama</string>
+    <string name="namePlaceholder">Namaku</string>
+    <string name="logout">Keluar</string>
+    <string name="add_story">Tambah Story</string>
+    <string name="detail_story">Rincian Story</string>
+    <string name="profile_users">Profil Pengguna</string>
+</resources>

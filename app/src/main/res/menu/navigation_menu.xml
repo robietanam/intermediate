@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/account_circle"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/btn_map_activity"
+        android:title="Maps"
+        android:icon="@drawable/map"
+        app:showAsAction="always"
+        />
+
+
+
+</menu>

@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="email_field">Enter your email</string>
+    <string name="password_field">Enter your password</string>
+    <string name="title">STORY APP</string>
+    <string name="title_desc">Share your story without worry</string>
+    <string name="nama_field">Enter your name</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+
+    <string-array name="Languages">
+        <item>ID</item>
+        <item>EN</item>
+    </string-array>
+    <string name="appwidget_text">Story App</string>
+    <string name="camera">Camera</string>
+    <string name="galery">Galery</string>
+    <string name="descHint">Description..</string>
+    <string name="submit">Submit</string>
+    <string name="userPlaceHolder">User</string>
+    <string name="datePlaceHolder">Monday, 21 September 2023 (00:00)</string>
+    <string name="descriptionText">Description</string>
+    <string name="createdAtText">Created at :</string>
+    <string name="createdByText">By :</string>
+    <string name="descriptionPlaceHolder">Lorem Ipsum Yeah</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="name">Name</string>
+    <string name="namePlaceholder">My name</string>
+    <string name="logout">Logout</string>
+    <string name="add_story">Add Story</string>
+    <string name="detail_story">Detail Story</string>
+    <string name="profile_users">Profile Users</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="retry">Coba lagi</string>
+    <string name="retro_type">Retro</string>
+
+</resources>
