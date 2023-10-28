@@ -5,23 +5,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.liveData
 import com.bangkit.navigationsubmission.data.retrofit.ApiConfig
-import com.example.androidintermedieatesubmission.data.database.StoryDatabase
-import com.example.androidintermedieatesubmission.data.database.StoryRemoteMediator
+import com.example.androidintermedieatesubmission.data.repository.StoryRepository
 import com.example.androidintermedieatesubmission.data.response.StoryResponse
 import com.example.androidintermedieatesubmission.data.response.StoryResponseItem
-import com.example.androidintermedieatesubmission.data.source.StoryPagingSource
+import com.example.androidintermedieatesubmission.di.Injection
 import retrofit2.Callback
 import retrofit2.Response
 
-class StoryViewModel : ViewModel() {
+class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel() {
 
     private val _story = MutableLiveData<StoryResponse>()
     val story: LiveData<StoryResponse> = _story
@@ -29,28 +25,12 @@ class StoryViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-
     companion object{
         private const val TAG = "UserViewModel"
     }
 
-    @OptIn(ExperimentalPagingApi::class)
-    fun getPaging(token: String, context: Context) : LiveData<PagingData<StoryResponseItem>> {
-        val storyDatabase = StoryDatabase.getDatabase(context)
-        val apiService = ApiConfig.getApiService(token)
+    val getPaging : LiveData<PagingData<StoryResponseItem>> = storyRepository.getPaging().cachedIn(viewModelScope)
 
-        return Pager(
-            config = PagingConfig(
-                pageSize = 10
-            ),
-            remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
-            pagingSourceFactory = {
-//                StoryPagingSource(token = token, database = storyDatabase)
-//
-                storyDatabase.storyDao().getAllStory()
-            }
-        ).liveData.cachedIn(viewModelScope)
-    }
 
     fun getAll(token: String){
         _isLoading.value = true
@@ -75,5 +55,16 @@ class StoryViewModel : ViewModel() {
                 Log.e(TAG, "onFailure Fatal: ${t.message.toString()}")
             }
         })
+    }
+}
+
+
+class ViewModelFactoryStory(private val context: Context, private val token: String? = null) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return StoryViewModel(Injection.provideRepository(context, token = token)) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

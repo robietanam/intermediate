@@ -4,40 +4,34 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.androidintermedieatesubmission.data.response.ListStory
 import com.example.androidintermedieatesubmission.data.response.StoryResponse
 import com.example.androidintermedieatesubmission.data.response.StoryResponseItem
-
+import com.example.androidintermedieatesubmission.databinding.ActivityMapsBinding
+import com.example.androidintermedieatesubmission.helper.AuthData
+import com.example.androidintermedieatesubmission.helper.DetailData
+import com.example.androidintermedieatesubmission.ui.viewmodel.StoryViewModel
+import com.example.androidintermedieatesubmission.ui.viewmodel.ViewModelFactoryStory
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.example.androidintermedieatesubmission.databinding.ActivityMapsBinding
-import com.example.androidintermedieatesubmission.helper.AuthData
-import com.example.androidintermedieatesubmission.helper.AuthHelper
-import com.example.androidintermedieatesubmission.helper.DetailData
-import com.example.androidintermedieatesubmission.ui.viewmodel.StoryViewModel
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.gson.Gson
+import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -58,7 +52,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        storyViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[StoryViewModel::class.java]
+        storyViewModel = ViewModelProvider(this, ViewModelFactoryStory(this, token?.token))[StoryViewModel::class.java]
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment

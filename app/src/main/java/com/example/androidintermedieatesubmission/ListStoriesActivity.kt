@@ -14,19 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bangkit.navigationsubmission.data.preferences.AuthPreferences
 import com.bangkit.navigationsubmission.data.preferences.dataStore
 import com.bangkit.navigationsubmission.ui.viewmodel.ViewModelMainFactory
-import com.example.androidintermedieatesubmission.data.response.ListStory
 import com.example.androidintermedieatesubmission.data.response.StoryResponse
 import com.example.androidintermedieatesubmission.data.response.StoryResponseItem
 import com.example.androidintermedieatesubmission.databinding.ActivityListStoriesBinding
 import com.example.androidintermedieatesubmission.helper.AuthData
-import com.example.androidintermedieatesubmission.helper.AuthHelper
 import com.example.androidintermedieatesubmission.ui.adapter.LoadingStateAdapter
 import com.example.androidintermedieatesubmission.ui.adapter.StoriesAdapter
 import com.example.androidintermedieatesubmission.ui.viewmodel.AuthViewModel
 import com.example.androidintermedieatesubmission.ui.viewmodel.StoryViewModel
+import com.example.androidintermedieatesubmission.ui.viewmodel.ViewModelFactoryStory
 
 
 class ListStoriesActivity : AppCompatActivity() {
@@ -73,7 +73,14 @@ class ListStoriesActivity : AppCompatActivity() {
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if(it.resultCode == Activity.RESULT_OK){
-                storyViewModel.getAll(token?.token ?: "")
+                adapter.refresh()
+                adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        if (positionStart == 0) {
+                            binding.rvStories.scrollToPosition(0)
+                        }
+                    }
+                })
             }
         }
 
@@ -83,22 +90,18 @@ class ListStoriesActivity : AppCompatActivity() {
         binding = ActivityListStoriesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         val actionbar = supportActionBar
 
         actionbar!!.title = getString(R.string.app_name)
 
         adapter = StoriesAdapter()
+
         adapter.withLoadStateFooter(footer = LoadingStateAdapter{
             adapter.retry()
         })
+
         binding.rvStories.adapter = adapter
 
-        val pref = AuthPreferences.getInstance(application.dataStore)
-
-        var tokenViewModel = ViewModelProvider(this, ViewModelMainFactory(pref))[AuthViewModel::class.java]
-
-        storyViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[StoryViewModel::class.java]
 
         token = if (Build.VERSION.SDK_INT >= 33) {
             intent.getSerializableExtra(TOKEN_INTENT_KEY, AuthData::class.java)
@@ -106,31 +109,11 @@ class ListStoriesActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             intent.getSerializableExtra(TOKEN_INTENT_KEY) as AuthData
         }
-        /*
-        storyViewModel.getAll(token?.token ?: "")
-        storyViewModel.story.observe(this){
-            binding.srlRefresh.isRefreshing = false;
-            if (it != null){
-                Log.d("ISERROR", it.toString())
-                if (it.error == true){
-                    Toast.makeText(this@ListStoriesActivity, "Kredensial invalid, tolong login kembali", Toast.LENGTH_LONG).show()
-                    AuthHelper.logOut(this, tokenViewModel)
-                } else {
-                    story = it
-                    setStory(it)
-                }
 
-            } else {
-                AuthHelper.logOut(this, tokenViewModel)
-            }
 
-        }*/
+        storyViewModel = ViewModelProvider(this, ViewModelFactoryStory(this, token?.token))[StoryViewModel::class.java]
 
         getData()
-
-        /*storyViewModel.isLoading.observe(this){
-            showLoading(it)
-        }*/
 
         val layoutManager = LinearLayoutManager(this)
         binding.rvStories.layoutManager = layoutManager
@@ -143,30 +126,17 @@ class ListStoriesActivity : AppCompatActivity() {
 
         binding.srlRefresh.setOnRefreshListener {
             binding.srlRefresh.isRefreshing = true;
-            getData()
+            adapter.refresh()
             Toast.makeText(this, "List stories refreshed", Toast.LENGTH_SHORT).show()
 
-         /*   storyViewModel.getPaging(token?.token ?: "", this).observe(this){
-                binding.srlRefresh.isRefreshing = false;
-                if (it != null){
-                    Log.d("ISERROR", it.toString())
-                    setStory(it)
-
-                } else {
-                    AuthHelper.logOut(this, tokenViewModel)
-                }
-            }
-            Toast.makeText(this, "List stories refreshed", Toast.LENGTH_SHORT).show()*/
         }
 
-//        setAnimationLoading()
     }
 
     private fun getData(){
-        storyViewModel.getPaging(token?.token ?: "", this).observe(this){
+        storyViewModel.getPaging.observe(this){
             binding.srlRefresh.isRefreshing = false;
             if (it != null){
-                Log.d("ISERROR", it.toString())
                 setStory(it)
 
             } else {

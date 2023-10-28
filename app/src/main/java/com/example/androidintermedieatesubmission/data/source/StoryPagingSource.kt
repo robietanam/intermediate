@@ -1,15 +1,19 @@
 package com.example.androidintermedieatesubmission.data.source
 
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.bangkit.navigationsubmission.data.retrofit.ApiConfig
 import com.example.androidintermedieatesubmission.data.database.StoryDatabase
+import com.example.androidintermedieatesubmission.data.response.StoryResponse
 import com.example.androidintermedieatesubmission.data.response.StoryResponseItem
 
 class StoryPagingSource(private val token: String, private val database: StoryDatabase) :  PagingSource<Int, StoryResponseItem>() {
 
-    private companion object {
+     companion object {
         const val INITIAL_PAGE_INDEX = 1
+        fun snapshot(items: StoryResponse): PagingData<StoryResponseItem> {
+            return PagingData.from(items.listStory)
+        }
     }
 
     override fun getRefreshKey(state: PagingState<Int, StoryResponseItem>): Int? {

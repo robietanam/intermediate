@@ -55,6 +55,14 @@ class LoginActivity : AppCompatActivity() {
 
             } else if (it.error == false){
                 tokenViewModel.saveToken(token = it.loginResult!!.token!!, name = it.loginResult!!.name!!, userId = it.loginResult!!.userId!!)
+                tokenViewModel.getToken().observe(this){
+                    if (it.token != "" && it.token?.isNotEmpty() == true){
+                        val intentDetail = Intent(this, ListStoriesActivity::class.java)
+                        intentDetail.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intentDetail.putExtra(ListStoriesActivity.TOKEN_INTENT_KEY, it)
+                        startActivity(intentDetail)
+                    }
+                }
                 checkIsNotEmpty()
 
             } else {
@@ -70,14 +78,7 @@ class LoginActivity : AppCompatActivity() {
             setMyButtonLoading(it)
         }
 
-        tokenViewModel.getToken().observe(this){
-            if (it.token != "" && it.token?.isNotEmpty() == true){
-                val intentDetail = Intent(this, ListStoriesActivity::class.java)
-                intentDetail.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                intentDetail.putExtra(ListStoriesActivity.TOKEN_INTENT_KEY, it)
-                startActivity(intentDetail)
-            }
-        }
+
 
         registerText.setOnClickListener {
             val intentDetail = Intent(this, RegisterActivity::class.java)

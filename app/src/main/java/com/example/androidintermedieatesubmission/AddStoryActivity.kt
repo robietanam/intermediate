@@ -1,7 +1,6 @@
 package com.example.androidintermedieatesubmission
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -25,6 +24,7 @@ import com.example.androidintermedieatesubmission.helper.uriToFile
 import com.example.androidintermedieatesubmission.ui.components.ButtonWithLoadingCustom
 import com.example.androidintermedieatesubmission.ui.viewmodel.AddStoryViewModel
 import com.example.androidintermedieatesubmission.ui.viewmodel.StoryViewModel
+import com.example.androidintermedieatesubmission.ui.viewmodel.ViewModelFactoryStory
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -79,8 +79,6 @@ class AddStoryActivity : AppCompatActivity() {
 
         addStoryViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[AddStoryViewModel::class.java]
 
-        val storyViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[StoryViewModel::class.java]
-
         val token = if (Build.VERSION.SDK_INT >= 33) {
             intent.getSerializableExtra(ADD_STORY_KEY, AuthData::class.java)
         } else {
@@ -88,18 +86,13 @@ class AddStoryActivity : AppCompatActivity() {
             intent.getSerializableExtra(ADD_STORY_KEY) as AuthData
         }
 
-
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        Log.d("tokennya", token.toString())
 
         addStoryViewModel.story.observe(this){ result ->
             setMyButtonEnable(true)
-            Log.d("HASILNYAAPA", result.toString())
             if (result.error == true){
                 Toast.makeText(this@AddStoryActivity, result.message, Toast.LENGTH_SHORT).show()
             } else {
-                storyViewModel.getAll(token?.token ?: "")
                 Toast.makeText(this@AddStoryActivity, result.message, Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK)
                 finish()
@@ -299,7 +292,6 @@ class AddStoryActivity : AppCompatActivity() {
             setMyButtonLoading(true)
             currentImageUri?.let { uri ->
                 val imageFile = uriToFile(uri, this)
-                Log.d("ImageFile", "showImage: ${imageFile.path}")
                 val description =  binding.editDesc.text.toString()
                 if (!binding.checkLoc.isChecked){
                     locationToReq = null
@@ -310,7 +302,6 @@ class AddStoryActivity : AppCompatActivity() {
                 )
             }
         } else {
-            Log.d("HASILNYAAPA", "${currentImageUri}  ${binding.editDesc.text.isNotEmpty()}")
             Toast.makeText(this@AddStoryActivity, "Silahkan pilih gambar dan isi deskripsi", Toast.LENGTH_SHORT).show()
         }
 

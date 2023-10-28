@@ -7,11 +7,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.bangkit.navigationsubmission.data.retrofit.ApiService
-import com.example.androidintermedieatesubmission.data.response.StoryResponse
 import com.example.androidintermedieatesubmission.data.response.StoryResponseItem
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @OptIn(ExperimentalPagingApi::class)
 class StoryRemoteMediator(
